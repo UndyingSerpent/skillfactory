@@ -1,5 +1,5 @@
 # skillfactory
-Обучение на курсе DataScientist
+Обучение [Профессия Data Scientist](https://skillfactory.ru/dstpro)
 
 # Программа курса «Профессия Data Scientist» :
 ## Семестр 1. Foundation
