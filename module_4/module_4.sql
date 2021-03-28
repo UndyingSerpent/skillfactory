@@ -92,3 +92,79 @@ select date_part('hour', avg(f.actual_arrival - f.actual_departure)) * 60
 from dst_project.flights f
 ;
 
+-- Задание 4.5
+/*
+ Вопрос 1 звучит: Мест какого класса у SU9 больше всего?
+ Су-9 — советский однодвигательный всепогодный истребитель-перехватчик ;)
+ Конечно же комфорт! ;)))
+ Так разу и не поймешь, что SU9 - это aircraft_code
+*/
+select s.fare_conditions,
+       count (s.aircraft_code) as cnt_class
+from dst_project.seats s
+where s.aircraft_code = 'SU9'
+group by s.fare_conditions
+order by cnt_class desc
+limit 1
+;
+
+select *
+from dst_project.bookings b
+order by b.total_amount asc
+limit 1
+;
+
+select b.seat_no
+from dst_project.tickets t
+    join dst_project.boarding_passes b on b.ticket_no = t.ticket_no
+where t.passenger_id = '4313 788533'
+
+-- Задание 5.1
+select count(flight_id) as cnt_flight
+from dst_project.flights f
+    join dst_project.airports a
+        on a.airport_code = f.arrival_airport
+        and a.city = 'Anapa'
+--where (date_trunc('year', f.actual_arrival) in ('2017-01-01'))
+where (date_part('year', f.actual_arrival) = 2017)
+;
+
+select count(f.flight_id) as cnt_flight
+from dst_project.flights f
+    join dst_project.airports a
+        on a.airport_code = f.departure_airport
+        and a.city = 'Anapa'
+where (date_trunc('month', f.scheduled_departure) in ('2017-01-01','2017-02-01', '2017-12-01'))
+        AND status not in ('Cancelled')
+;
+
+select count(flight_id) as cnt_flight
+from dst_project.flights f
+    join dst_project.airports a
+        on a.airport_code = f.departure_airport
+        and a.city = 'Anapa'
+where f.status = 'Cancelled'
+;
+
+select count(f.flight_id) as cnt_flight
+from dst_project.flights f
+    join dst_project.airports a
+        on a.airport_code = f.departure_airport
+        and a.city = 'Anapa'
+    join dst_project.airports aa
+        on aa.airport_code = f.arrival_airport
+        and aa.city not in ('Moscow')
+;
+
+select a.model,
+       count(distinct s.seat_no) as cnt_seat
+from dst_project.seats s
+    join dst_project.aircrafts a
+        on a.aircraft_code = s.aircraft_code
+    join dst_project.flights f
+        on f.aircraft_code = s.aircraft_code
+        and f.departure_airport = 'AAQ'
+group by a.model
+order by cnt_seat desc
+limit 1
+;
