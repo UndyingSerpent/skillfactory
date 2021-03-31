@@ -246,13 +246,18 @@ SELECT f.flight_id, -- ID рейса
        date_part('hour', f.actual_arrival - f.actual_departure)*60
         + date_part('minute', f.actual_arrival - f.actual_departure) as flight_time_minutes, -- Время в пути
        a.model, -- Модель самолета
+       -- Эконом
        s.count_economy, -- Количество мест в самолете
        coalesce(t.count_economy, 0) as boarding_economy, -- Количество занятых мест в самолете
+       coalesce(t.amount_economy, 0) as amount_economy, -- Стоиость проданных билетов на рейст
+       -- Комфорт
        s.count_comfort, -- Количество мест в самолете
        coalesce(t.count_comfort, 0) as boarding_comfort, -- Количество занятых мест в самолете
+       coalesce(t.amount_comfort, 0) as amount_comfort, -- Стоиость проданных билетов на рейст
+       -- Бизнес
        s.count_business, -- Количество мест в самолете
        coalesce(t.count_business, 0) as boarding_business, -- Количество занятых мест в самолете
-       coalesce(t.amount, 0) as total_amount -- Сумма проданных билетов на рейст
+       coalesce(t.amount_business, 0) as amount_business -- Стоиость проданных билетов на рейст
 FROM dst_project.flights f
     join dst_project.aircrafts a -- Самолет
         on a.aircraft_code = f.aircraft_code
@@ -268,7 +273,12 @@ FROM dst_project.flights f
             group by s.aircraft_code) s
         on s.aircraft_code = f.aircraft_code
     left join (select t.flight_id,
-                      sum(t.amount) as amount, -- Общая сумма
+                      -- Стоимость проданных мест по классам
+                      sum (CASE WHEN t.fare_conditions = 'Economy' THEN t.amount END) as amount_economy,
+                      sum (CASE WHEN t.fare_conditions = 'Comfort' THEN t.amount END) as amount_comfort,
+                      sum (CASE WHEN t.fare_conditions = 'Business' THEN t.amount END) as amount_business,
+                      --sum(t.amount) as amount, -- Общая сумма
+                      -- Количество проданных мест по классам
                       count (CASE WHEN t.fare_conditions = 'Economy' THEN t.fare_conditions END) as count_economy,
                       count (CASE WHEN t.fare_conditions = 'Comfort' THEN t.fare_conditions END) as count_comfort,
                       count (CASE WHEN t.fare_conditions = 'Business' THEN t.fare_conditions END) as count_business
