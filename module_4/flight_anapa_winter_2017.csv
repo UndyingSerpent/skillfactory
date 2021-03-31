@@ -1,3 +1,4 @@
+flight_id,flight_no,departure_city,arrival_city,scheduled_departure,scheduled_arrival,flight_time_minutes,model,count_economy,boarding_economy,count_comfort,boarding_comfort,count_business,boarding_business,total_amount
 136119,PG0252,Anapa,Moscow,2017-01-03 10:05:00.000000,2017-01-03 11:45:00.000000,101,Boeing 737-300,118,102,0,0,12,11,1653000
 136120,PG0252,Anapa,Moscow,2017-02-24 10:05:00.000000,2017-02-24 11:45:00.000000,99,Boeing 737-300,118,98,0,0,12,11,1605400
 136122,PG0252,Anapa,Moscow,2017-01-08 10:05:00.000000,2017-01-08 11:45:00.000000,100,Boeing 737-300,118,87,0,0,12,10,1431000
